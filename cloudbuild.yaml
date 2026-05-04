@@ -72,7 +72,7 @@ images:
 
 # 構建選項
 options:
-  machineType: 'N1_HIGHCPU_8'
+  machineType: 'E2_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
 
 # 替換變數（可在 Cloud Build 觸發器中設置）
