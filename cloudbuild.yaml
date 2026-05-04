@@ -1,0 +1,91 @@
+# Cloud Build Configuration for OpenClaw CLI Cloud Run Service
+# 此配置定義了從 GitHub 推送到自動部署到 Cloud Run 的完整流程
+
+steps:
+  # 步驟 1：構建 Docker 映像
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-image'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:latest'
+      - '.'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+
+  # 步驟 2：推送映像到 Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-image'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+
+  # 步驟 3：推送 latest 標籤
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-latest'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:latest'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+
+  # 步驟 4：部署到 Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: 'deploy-cloud-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'openclaw-cli'
+      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
+      - '--region=${_REGION}'
+      - '--memory=2Gi'
+      - '--cpu=2'
+      - '--timeout=3600'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=SHELL_PASSWORD=${_SHELL_PASSWORD},PROJECT_ID=${PROJECT_ID},REGION=${_REGION}'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
+
+# 替代步驟 4：使用 gcloud run deploy（更簡單）
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   id: 'deploy-cloud-run'
+#   args:
+#     - 'run'
+#     - 'deploy'
+#     - 'openclaw-cli'
+#     - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
+#     - '--region=${_REGION}'
+#     - '--memory=2Gi'
+#     - '--cpu=2'
+#     - '--timeout=3600'
+#     - '--allow-unauthenticated'
+#     - '--set-env-vars=SHELL_PASSWORD=${_SHELL_PASSWORD},PROJECT_ID=${PROJECT_ID},REGION=${_REGION}'
+
+# 映像名稱
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:latest'
+
+# 構建選項
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+# 替換變數（可在 Cloud Build 觸發器中設置）
+substitutions:
+  _REGION: 'asia-east1'
+  _ARTIFACT_REPO: 'cloud-run-source-deploy'
+  _SHELL_PASSWORD: 'changeme'
+
+# 構建超時（1 小時）
+timeout: '3600s'
+
+# 標籤
+tags:
+  - 'openclaw-cli'
+  - 'cloud-run'
+  - 'gcp-cloud-build'

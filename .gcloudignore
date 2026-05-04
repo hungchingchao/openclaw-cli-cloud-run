@@ -1,0 +1,76 @@
+# This file specifies files that should NOT be uploaded to Google Cloud
+# when running `gcloud builds submit` or `gcloud app deploy`
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Node files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build files
+.gradle/
+build/
+target/
+
+# Documentation
+docs/
+*.md
+README.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Local files
+.env
+.env.local
+local_config.json
+secrets.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+tmp/
+
+# OS files
+Thumbs.db
+.DS_Store
