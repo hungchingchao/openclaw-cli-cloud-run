@@ -82,7 +82,7 @@ echo ""
 # 啟動 ttyd
 # -w: 允許寶入
 # --credential: 設置認證信息
-# /bin/bash --login: 使用完整路徑的 bash 並載入登入脚本
+# bash: 使用 bash shell
 exec ttyd --port 8080 -w \
   --credential "admin:${SHELL_PASSWORD}" \
-  /bin/bash --login
+  bash
