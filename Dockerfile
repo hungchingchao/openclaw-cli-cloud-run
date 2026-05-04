@@ -28,32 +28,28 @@ ENV PATH="/usr/local/bin:${PATH}" \
     HOME="/root" \
     SHELL="/bin/bash"
 
-# 設置 Shell 環境 - 簡化版本
-RUN cat >> /root/.bashrc << 'EOF'
-
-export TERM=xterm-256color
-export CLICOLOR=1
-alias ls="ls --color=auto"
-alias ll="ls -lah --color=auto"
-alias la="ls -A --color=auto"
-alias grep="grep --color=auto"
-alias diff="diff --color=auto"
-
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-fi
-if [ -f /usr/lib/google-cloud-sdk/completion.bash.inc ]; then
-    . /usr/lib/google-cloud-sdk/completion.bash.inc
-fi
-
-echo ""
-echo "================================"
-echo "  ✅ OpenClaw CLI 已就緒"
-echo "  📁 專案: llm-mcp-463803"
-echo "================================"
-echo ""
-
-EOF
+# 設置 Shell 環境 - 不使用 heredoc，直接使用 echo 命令
+RUN echo 'export TERM=xterm-256color' >> /root/.bashrc && \
+    echo 'export CLICOLOR=1' >> /root/.bashrc && \
+    echo 'alias ls="ls --color=auto"' >> /root/.bashrc && \
+    echo 'alias ll="ls -lah --color=auto"' >> /root/.bashrc && \
+    echo 'alias la="ls -A --color=auto"' >> /root/.bashrc && \
+    echo 'alias grep="grep --color=auto"' >> /root/.bashrc && \
+    echo 'alias diff="diff --color=auto"' >> /root/.bashrc && \
+    echo '' >> /root/.bashrc && \
+    echo 'if [ -f /usr/share/bash-completion/bash_completion ]; then' >> /root/.bashrc && \
+    echo '    . /usr/share/bash-completion/bash_completion' >> /root/.bashrc && \
+    echo 'fi' >> /root/.bashrc && \
+    echo 'if [ -f /usr/lib/google-cloud-sdk/completion.bash.inc ]; then' >> /root/.bashrc && \
+    echo '    . /usr/lib/google-cloud-sdk/completion.bash.inc' >> /root/.bashrc && \
+    echo 'fi' >> /root/.bashrc && \
+    echo '' >> /root/.bashrc && \
+    echo 'echo ""' >> /root/.bashrc && \
+    echo 'echo "================================"' >> /root/.bashrc && \
+    echo 'echo "  ✅ OpenClaw CLI 已就緒"' >> /root/.bashrc && \
+    echo 'echo "  📁 專案: llm-mcp-463803"' >> /root/.bashrc && \
+    echo 'echo "================================"' >> /root/.bashrc && \
+    echo 'echo ""' >> /root/.bashrc
 
 # 暴露 ttyd 端口
 EXPOSE 8080
