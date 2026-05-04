@@ -33,8 +33,8 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
 
-  # 步驟 4：部署到 Cloud Run
-  - name: 'gcr.io/cloud-builders/gke-deploy'
+  # 步驟 4：部署到 Cloud Run - 修復：使用 gcloud 而不是 gke-deploy
+  - name: 'gcr.io/cloud-builders/gcloud'
     id: 'deploy-cloud-run'
     args:
       - 'run'
@@ -49,21 +49,6 @@ steps:
       - '--set-env-vars=SHELL_PASSWORD=${_SHELL_PASSWORD},PROJECT_ID=${PROJECT_ID},REGION=${_REGION}'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=${_REGION}'
-
-# 替代步驟 4：使用 gcloud run deploy（更簡單）
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   id: 'deploy-cloud-run'
-#   args:
-#     - 'run'
-#     - 'deploy'
-#     - 'openclaw-cli'
-#     - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/openclaw-cli:${SHORT_SHA}'
-#     - '--region=${_REGION}'
-#     - '--memory=2Gi'
-#     - '--cpu=2'
-#     - '--timeout=3600'
-#     - '--allow-unauthenticated'
-#     - '--set-env-vars=SHELL_PASSWORD=${_SHELL_PASSWORD},PROJECT_ID=${PROJECT_ID},REGION=${_REGION}'
 
 # 映像名稱
 images:
