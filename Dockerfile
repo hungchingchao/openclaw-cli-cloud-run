@@ -29,36 +29,34 @@ ENV PATH="/usr/local/bin:${PATH}" \
     SHELL="/bin/bash"
 
 # 設置 Shell 環境
-RUN cat >> /root/.bashrc << 'EOF'
-
-export TERM=xterm-256color
-export CLICOLOR=1
-alias ls="ls --color=auto"
-alias ll="ls -lah --color=auto"
-alias la="ls -A --color=auto"
-alias grep="grep --color=auto"
-alias diff="diff --color=auto"
-export PS1="\[\e[01;32m\]\u@openclaw-cli\[\e[00m\]:\[\e[01;34m\]\w\[\e[00m\]\$ "
-
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-fi
-if [ -f /usr/lib/google-cloud-sdk/completion.bash.inc ]; then
-    . /usr/lib/google-cloud-sdk/completion.bash.inc
-fi
-
-echo ""
-echo "================================"
-echo "  ✅ OpenClaw CLI 已就緒"
-echo "  📁 專案: llm-mcp-463803"
-echo "================================"
-echo ""
-echo "💡 使用方式："
-echo "  執行 openclaw-cli 進入 OpenClaw 互動式 CLI"
-echo "  或直接執行 openclaw-cli 命令"
-echo ""
-
-EOF
+RUN printf '\n\
+export TERM=xterm-256color\n\
+export CLICOLOR=1\n\
+alias ls="ls --color=auto"\n\
+alias ll="ls -lah --color=auto"\n\
+alias la="ls -A --color=auto"\n\
+alias grep="grep --color=auto"\n\
+alias diff="diff --color=auto"\n\
+export PS1="\\[\\e[01;32m\\]\\u@openclaw-cli\\[\\e[00m\\]:\\[\\e[01;34m\\]\\w\\[\\e[00m\\]\\$ "\n\
+\n\
+if [ -f /usr/share/bash-completion/bash_completion ]; then\n\
+    . /usr/share/bash-completion/bash_completion\n\
+fi\n\
+if [ -f /usr/lib/google-cloud-sdk/completion.bash.inc ]; then\n\
+    . /usr/lib/google-cloud-sdk/completion.bash.inc\n\
+fi\n\
+\n\
+echo ""\n\
+echo "================================"\n\
+echo "  ✅ OpenClaw CLI 已就緒"\n\
+echo "  📁 專案: llm-mcp-463803"\n\
+echo "================================"\n\
+echo ""\n\
+echo "💡 使用方式："\n\
+echo "  執行 openclaw-cli 進入 OpenClaw 互動式 CLI"\n\
+echo "  或直接執行 openclaw-cli 命令"\n\
+echo ""\n\
+' >> /root/.bashrc
 
 # 暴露 ttyd 端口
 EXPOSE 8080
