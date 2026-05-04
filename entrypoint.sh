@@ -80,9 +80,9 @@ log_info "密碼：${SHELL_PASSWORD}"
 echo ""
 
 # 啟動 ttyd
-# -w: 允許寫入（修復版本，使用 -w 而不是 --writable）
+# -w: 允許寶入
 # --credential: 設置認證信息
-# bash: 使用 bash shell
+# /bin/bash --login: 使用完整路徑的 bash 並載入登入脚本
 exec ttyd --port 8080 -w \
   --credential "admin:${SHELL_PASSWORD}" \
-  bash
+  /bin/bash --login
